@@ -2,38 +2,47 @@
 #include <iostream>
 using namespace std;
 
-// O(n^2) => double for each item
+
+
+// Solution 1 use extra space 
+// O(n) , .erase -> O(1)
 class Solution {
 public:
-    vector<vector<int>> generate(int numRows) {
-        vector<vector<int>> res = {{1}};
-
-        for (int i = 1; i < numRows; i++) {
-            vector <int> row = res.back();
-            row.insert(row.begin(), 0);
-            row.push_back(0);
-            vector <int> newRow;
-            for (int j = 0; j <= row.size() - 2; j++) {
-                newRow.push_back(row[j] + row[j + 1]);
+    int singleNumber(vector<int>& nums) {
+        unordered_map<int, int> mp;
+        for (int i = 0; i < nums.size(); i++) {
+            if (mp.find(nums[i]) == mp.end()) {
+                mp[nums[i]] = 1;
             }
-            res.push_back(newRow);
+            else {
+                mp.erase(nums[i]);
+            }
         }
-        return res;
+        auto it = mp.begin();
+        return it->first;
     }
 };
 
+// Solution 2 not use extra space 
+// O(n) , apply xor operator in binary
+class Solution2 {
+public:
+    int singleNumber(vector<int>& nums) {
+        int result = 0; 
+        for (int i = 0; i < nums.size(); i++) {
+            result = result ^ nums[i];
+        }
+        return result;
+    }
+};
+
+
 int main()
 {
-    Solution solution;
-    vector<vector<int>> rs = solution.generate(5);
+    Solution solution2;
 
-    for (const auto& innerVec : rs) {
-        cout << "{ ";
-        for (int val : innerVec) {
-            cout << val << ' ';
-        }
-        cout << " }";
-    }
-
+    vector<int> v = {2,2,1};
+    int rs = solution2.singleNumber(v);
+    cout << "result: " << rs;
     return 0;
 }
