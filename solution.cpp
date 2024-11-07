@@ -2,44 +2,87 @@
 #include <iostream>
 using namespace std;
 
-// Use Boyer-Moore algorithm
-// O(n) and use O(1) space
+// O(n^2) -> 2 for
 class Solution {
 public:
-    int majorityElement(vector<int>& nums) {
-        int res = 0, count = 0;
+    void moveZeroes(vector<int>& nums) {
         for (int i = 0; i < nums.size(); i++) {
-            if (count == 0) 
-                res = nums[i];
-            count += (res == nums[i] ? 1 : -1);
+            if (nums[i] == 0) {
+                for (int j = i; j < nums.size() - 1; j++){
+                    nums[j] = nums[j + 1];
+                    nums[j + 1] = 0;
+                }
+            }
         }
-        return res;
+
     }
 };
 
-
-// O(n) and use O(n) space
+// O(n) but use extra space 
 class Solution2 {
 public:
-    int majorityElement(vector<int>& nums) {
-        int arrsize = nums.size();
-        unordered_map<int, int> mp;
-        for (int i = 0; i < arrsize; i++) {
-            mp[nums[i]]++;
-            if (mp[nums[i]] > arrsize / 2) 
-                return nums[i];
+    void moveZeroes(vector<int>& nums) {
+        vector<int> v; 
+        int count = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] == 0) count++;
+            else v.push_back(nums[i]);
         }
-        return 0;
+        for(int i = 0; i < count; i++) {
+            v.push_back(0);
+        }
+        nums = v;
     }
 };
+
+// Not optimal 
+class Solution3 {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int l = 0; 
+        while(l < nums.size() - 1) {
+            if (nums[l] == 0) {
+                int r = l + 1;
+                while(r < nums.size()) {
+                    if (nums[r] != 0) {
+                        nums[l] = nums[r];
+                        nums[r] = 0;
+                        r++;
+                        l++;
+                    } 
+                    else 
+                        r++;
+                }
+            }
+            l++; // avoid permanent loop
+        }
+    }
+};
+
+// The most optimal 
+class Solution3 {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int l = 0;  
+        for (int r = 0; r < nums.size(); ++r) {
+            if (nums[r] != 0) {
+                swap(nums[l], nums[r]);
+                l++;
+            }
+        }
+    }
+};
+
+
 
 int main()
 {
-    Solution solution;
+    Solution3 solution;
+    vector<int> v = {0};
+    solution.moveZeroes(v);
 
-    vector<int> v = {2,2,1,1,1,2,2};
-    int rs = solution.majorityElement(v);
-    cout << "result: " << rs;
-
+    for (int item : v) {
+        cout << item << endl;
+    }
     return 0;
 }
