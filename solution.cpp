@@ -2,47 +2,44 @@
 #include <iostream>
 using namespace std;
 
-
-
-// Solution 1 use extra space 
-// O(n) , .erase -> O(1)
+// Use Boyer-Moore algorithm
+// O(n) and use O(1) space
 class Solution {
 public:
-    int singleNumber(vector<int>& nums) {
-        unordered_map<int, int> mp;
+    int majorityElement(vector<int>& nums) {
+        int res = 0, count = 0;
         for (int i = 0; i < nums.size(); i++) {
-            if (mp.find(nums[i]) == mp.end()) {
-                mp[nums[i]] = 1;
-            }
-            else {
-                mp.erase(nums[i]);
-            }
+            if (count == 0) 
+                res = nums[i];
+            count += (res == nums[i] ? 1 : -1);
         }
-        auto it = mp.begin();
-        return it->first;
+        return res;
     }
 };
 
-// Solution 2 not use extra space 
-// O(n) , apply xor operator in binary
+
+// O(n) and use O(n) space
 class Solution2 {
 public:
-    int singleNumber(vector<int>& nums) {
-        int result = 0; 
-        for (int i = 0; i < nums.size(); i++) {
-            result = result ^ nums[i];
+    int majorityElement(vector<int>& nums) {
+        int arrsize = nums.size();
+        unordered_map<int, int> mp;
+        for (int i = 0; i < arrsize; i++) {
+            mp[nums[i]]++;
+            if (mp[nums[i]] > arrsize / 2) 
+                return nums[i];
         }
-        return result;
+        return 0;
     }
 };
-
 
 int main()
 {
-    Solution solution2;
+    Solution solution;
 
-    vector<int> v = {2,2,1};
-    int rs = solution2.singleNumber(v);
+    vector<int> v = {2,2,1,1,1,2,2};
+    int rs = solution.majorityElement(v);
     cout << "result: " << rs;
+
     return 0;
 }
