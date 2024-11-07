@@ -2,32 +2,38 @@
 #include <iostream>
 using namespace std;
 
-// for -> O(n) mp.find() -> O(1)
-class Solution
-{ public:
-    vector<int> twoSum(vector<int> &nums, int target)
-    {
-        map<int, int> mp;
-        for (int i = 0; i < nums.size(); i++) {
-            int diff = target - nums[i];
-            if (mp.find(diff) != mp.end()) {
-                return {mp[diff], i};
+// O(n^2) => double for each item
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> res = {{1}};
+
+        for (int i = 1; i < numRows; i++) {
+            vector <int> row = res.back();
+            row.insert(row.begin(), 0);
+            row.push_back(0);
+            vector <int> newRow;
+            for (int j = 0; j <= row.size() - 2; j++) {
+                newRow.push_back(row[j] + row[j + 1]);
             }
-            else {
-                mp[nums[i]] = i;
-            }
+            res.push_back(newRow);
         }
-        return {0, 0};
+        return res;
     }
 };
 
 int main()
 {
     Solution solution;
-    vector<int> nums = {3,3};
-    int target = 6;
-    vector<int> a = solution.twoSum(nums, target);
-    cout << endl;
-    cout << a[0] << " " << a[1] << endl;
+    vector<vector<int>> rs = solution.generate(5);
+
+    for (const auto& innerVec : rs) {
+        cout << "{ ";
+        for (int val : innerVec) {
+            cout << val << ' ';
+        }
+        cout << " }";
+    }
+
     return 0;
 }
