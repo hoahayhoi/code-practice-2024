@@ -2,47 +2,33 @@
 #include <iostream>
 using namespace std;
 
-// BruceForce O(n^2)
+// Kind of binary search
 class Solution {
 public:
-    int maxProfit(vector<int>& prices) {
-        int res = 0; 
-        for(int i = 0; i < prices.size() - 1; i++) {
-            for(int j = i + 1; j < prices.size(); j++) {
-                int diff = prices[j] - prices[i];
-                if (prices[j] > prices[i] && diff > res) {
-                    res = diff;
-                }
+    int searchInsert(vector<int>& nums, int target) {
+        int l = 0, r = nums.size() - 1;
+        while (l <= r) {
+            int m = (r + l) / 2; 
+            if (target == nums[m]) {
+                return m;
             }
-        }
-        return res;
-    }
-};
-
-// Two poiter Mem: O(1), T : O(n)
-class Solution2 {
-public:
-    int maxProfit(vector<int>& prices) {
-        int l = 0, r = 1; 
-        int res = 0; 
-        while (r < prices.size()) {
-            int diff = prices[r] - prices[l];
-            if (prices[r] > prices[l]) {
-                res = max(diff, res);
+            else if (nums[m] > target) {
+                r = m - 1; 
             }
             else {
-                l = r; 
+                l = m + 1;
             }
-            r++;
         }
-        return res;
+        return l;
     }
 };
+// [1, 3, 5]
 
 int main()
 {
-    Solution2 solution;
-    vector <int> v = {7,1,5,3,6,4};
-    cout << "Max profit: " << solution.maxProfit(v);
+    Solution solution;
+    vector <int> v = {1,3,5,6};
+    cout << "res " << solution.searchInsert(v, 4);
+
     return 0;
 }
