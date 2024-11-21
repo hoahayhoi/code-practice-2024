@@ -2,33 +2,38 @@
 #include <iostream>
 using namespace std;
 
-// Kind of binary search
 class Solution {
 public:
-    int searchInsert(vector<int>& nums, int target) {
-        int l = 0, r = nums.size() - 1;
-        while (l <= r) {
-            int m = (r + l) / 2; 
-            if (target == nums[m]) {
-                return m;
-            }
-            else if (nums[m] > target) {
-                r = m - 1; 
+    int romanToInt(string s) {
+        unordered_map<char, int> mp = {
+            {'I', 1},
+            {'V', 5},
+            {'X', 10},
+            {'L', 50},
+            {'C', 100},
+            {'D', 500},
+            {'M', 1000}
+        };
+        int res = 0; 
+        for (int i = 0; i < s.size(); i++) {
+            if (i + 1 < s.size() && mp[s[i]] < mp[s[i + 1]]) { 
+                res -= mp[s[i]]; 
             }
             else {
-                l = m + 1;
+                res += mp[s[i]]; 
             }
         }
-        return l;
+        return res;
     }
 };
-// [1, 3, 5]
+
 
 int main()
 {
     Solution solution;
-    vector <int> v = {1,3,5,6};
-    cout << "res " << solution.searchInsert(v, 4);
+    string s = "CMVIII";
+    cout << "res: " <<  solution.romanToInt(s) << endl;
+    
 
     return 0;
 }
