@@ -2,37 +2,29 @@
 #include <iostream>
 using namespace std;
 
+
+// O(n * strs[0].size())
 class Solution {
 public:
-    int romanToInt(string s) {
-        unordered_map<char, int> mp = {
-            {'I', 1},
-            {'V', 5},
-            {'X', 10},
-            {'L', 50},
-            {'C', 100},
-            {'D', 500},
-            {'M', 1000}
-        };
-        int res = 0; 
-        for (int i = 0; i < s.size(); i++) {
-            if (i + 1 < s.size() && mp[s[i]] < mp[s[i + 1]]) { 
-                res -= mp[s[i]]; 
+    string longestCommonPrefix(vector<string>& strs) {
+        string res = "";  
+        for (int i = 0 ; i < strs[0].size(); i ++) { 
+            for (string s : strs) { 
+                if (i == s.size() || s[i] != strs[0][i]) { 
+                    return res; 
+                }
             }
-            else {
-                res += mp[s[i]]; 
-            }
+            res += strs[0][i];
         }
         return res;
     }
 };
 
-
 int main()
 {
     Solution solution;
-    string s = "CMVIII";
-    cout << "res: " <<  solution.romanToInt(s) << endl;
+    vector <string> strs = {"flower", "flow", "flight"}; 
+    cout << endl << "res: " << solution.longestCommonPrefix(strs); 
     
 
     return 0;
