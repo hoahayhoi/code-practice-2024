@@ -2,30 +2,41 @@
 #include <iostream>
 using namespace std;
 
+//O(n)
 
-// O(n * strs[0].size())
 class Solution {
 public:
-    string longestCommonPrefix(vector<string>& strs) {
-        string res = "";  
-        for (int i = 0 ; i < strs[0].size(); i ++) { 
-            for (string s : strs) { 
-                if (i == s.size() || s[i] != strs[0][i]) { 
-                    return res; 
+    bool isValid(string s) {
+        if (s.length() % 2 != 0) return false;
+
+        stack <char> st; 
+        for (char c : s) {
+            if (c == '(' || c == '{' || c == '[') {
+                st.push(c);
+            } else {
+                if (st.empty()) return false; 
+
+                char t = st.top();
+                if ((t == '(' && c == ')') || 
+                    (t == '{' && c == '}') || 
+                    (t == '[' && c == ']')) {
+                    st.pop(); 
+                } else {
+                    return false; 
                 }
+                
             }
-            res += strs[0][i];
         }
-        return res;
+        return st.empty(); 
     }
-};
+};  
 
 int main()
 {
     Solution solution;
-    vector <string> strs = {"flower", "flow", "flight"}; 
-    cout << endl << "res: " << solution.longestCommonPrefix(strs); 
-    
+    string s = "(]";
+
+    cout << endl << solution.isValid(s);
 
     return 0;
 }
