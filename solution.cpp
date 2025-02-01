@@ -2,41 +2,42 @@
 #include <iostream>
 using namespace std;
 
-//O(n)
-
+//O(n x 2^n)
 class Solution {
 public:
-    bool isValid(string s) {
-        if (s.length() % 2 != 0) return false;
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> res;
+        vector<int> subset;
 
-        stack <char> st; 
-        for (char c : s) {
-            if (c == '(' || c == '{' || c == '[') {
-                st.push(c);
-            } else {
-                if (st.empty()) return false; 
-
-                char t = st.top();
-                if ((t == '(' && c == ')') || 
-                    (t == '{' && c == '}') || 
-                    (t == '[' && c == ']')) {
-                    st.pop(); 
-                } else {
-                    return false; 
-                }
-                
+        function<void(int)> dfs = [&](int i) {
+            if (i >= nums.size()) {
+                res.push_back(subset);
+                return;
             }
-        }
-        return st.empty(); 
+            subset.push_back(nums[i]);
+            dfs(i + 1);
+
+            subset.pop_back();
+            dfs(i + 1);
+        };
+
+        dfs(0);
+        return res;
     }
-};  
+};
 
-int main()
-{
-    Solution solution;
-    string s = "(]";
+int main() {
+    Solution sol;
+    vector<int> nums = {1, 2, 3};
+    vector<vector<int>> result = sol.subsets(nums);
 
-    cout << endl << solution.isValid(s);
-
+    for (const auto& subset : result) {
+        cout << "[";
+        for (int num : subset) {
+            cout << num << " ";
+        }
+        cout << "]" << endl;
+    }
     return 0;
 }
+
