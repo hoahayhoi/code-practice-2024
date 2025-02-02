@@ -2,41 +2,47 @@
 #include <iostream>
 using namespace std;
 
-//O(n x 2^n)
+//O(n x n!)
 class Solution {
 public:
-    vector<vector<int>> subsets(vector<int>& nums) {
+    vector<vector<int>> permute(vector<int>& nums) {
         vector<vector<int>> res;
-        vector<int> subset;
 
-        function<void(int)> dfs = [&](int i) {
-            if (i >= nums.size()) {
-                res.push_back(subset);
-                return;
+        if (nums.size() == 1) {
+            return {nums};
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            int t = nums.front();
+            nums.erase(nums.begin());
+
+            vector<vector<int>> perms = this->permute(nums);
+            for (auto& perm : perms) { 
+                perm.push_back(t);
             }
-            subset.push_back(nums[i]);
-            dfs(i + 1);
+            
+            res.insert(res.end(), perms.begin(), perms.end()); 
+            nums.push_back(t);
+        }
 
-            subset.pop_back();
-            dfs(i + 1);
-        };
-
-        dfs(0);
         return res;
     }
 };
 
-int main() {
-    Solution sol;
-    vector<int> nums = {1, 2, 3};
-    vector<vector<int>> result = sol.subsets(nums);
+// swap: 
 
-    for (const auto& subset : result) {
-        cout << "[";
-        for (int num : subset) {
+int main() {
+    Solution solution;
+    vector<int> nums = {1, 2, 3};
+
+    vector<vector<int>> result = solution.permute(nums);
+
+    // In kết quả
+    for (const auto& perm : result) {
+        for (int num : perm) {
             cout << num << " ";
         }
-        cout << "]" << endl;
+        cout << endl;
     }
     return 0;
 }
